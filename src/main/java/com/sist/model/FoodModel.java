@@ -30,6 +30,7 @@ public class FoodModel {
 	public String food_list(HttpServletRequest request, HttpServletResponse response) {
 		// 사용자 요청 (페이지를 보여달라)
 		String page=request.getParameter("page");
+		
 		if(page==null)
 			page="1";
 		int curpage=Integer.parseInt(page);
@@ -66,5 +67,25 @@ public class FoodModel {
 		
 		request.setAttribute("main_jsp", "../food/list.jsp");
 		return "../main/main.jsp";
+	}
+	@RequestMapping("food/detail.do")
+	public String food_detail(HttpServletRequest request,HttpServletResponse response) {
+		String fno=request.getParameter("fno");
+		String page=request.getParameter("page");
+		FoodVO vo=FoodDAO.foodDetailData(Integer.parseInt(fno));
+		request.setAttribute("vo", vo);
+		request.setAttribute("page", page);
+		// String food_detail(int fno)
+		// String food_detail(FoodVO vo)
+		// => 스프링 : 전송 객체 / 사용자 요청값 
+		// => request는 사용하지 않는다
+		request.setAttribute("main_jsp", "../food/detail.jsp");
+		return "../main/main.jsp";
+	}
+	@RequestMapping("food/detail_before.do") 
+	public String food_detail_before(HttpServletRequest request,HttpServletResponse response) {
+		String fno=request.getParameter("fno");
+		String page=request.getParameter("page");
+		return "redirect:../food/detail.do?fno="+fno+"&page="+page;
 	}
 }

@@ -43,4 +43,14 @@ public class FoodDAO {
 		}
 		return total;
 	   }
+	   // 상세보기ㅏ
+	   public static FoodVO foodDetailData(int fno) {
+		   SqlSession session=ssf.openSession();
+		   session.update("foodDetailData",fno);
+		   // insert / update / delete => commit
+		   session.commit();
+		   FoodVO vo=session.selectOne("foodDetailData",fno);
+		   session.close();
+		   return vo;
+	   }
 }
