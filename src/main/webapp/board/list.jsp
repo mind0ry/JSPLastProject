@@ -92,7 +92,7 @@
 	                 </td>
 	                 <td class="text-right">
 	                 <a href="../board/list.do?page=${curpage>1?curpage-1:curpage }" class="btn btn-sm btn-pink">이전</a>
-	                  ${curpage } page / ${totalpage } pages 
+	                  ${curpage } 페이지 / ${totalpage } 페이지스 
 	                  <a href="../board/list.do?page=${curpage<totalpage?curpage+1:curpage }" class="btn btn-sm btn-mint">다음</a>
 	                 </td>
 	                </tr>
