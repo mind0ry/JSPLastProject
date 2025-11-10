@@ -89,6 +89,19 @@ public class RecipeDAO {
    }
    // 쉐프 상세보기 
    // 레시피 상세보기
+   public static RecipeDetailVO recipeDetailData(int no) {
+	   RecipeDetailVO vo=null;
+	   try {
+		SqlSession session=ssf.openSession();
+		session.update("recipeHitIncrement",no);
+		session.commit();
+		vo=session.selectOne("recipeDetailData",no);
+		session.close();
+	} catch (Exception ex) {
+		ex.printStackTrace();
+	}
+	   return vo;
+   }
    // 레시피 등록 ****
    // 레시피 검색 
 }

@@ -103,4 +103,29 @@ public class FoodDAO {
 	   session.close();
 	   return vo;
    }
+   
+   public static List<FoodVO> foodFindData(Map map) {
+	   List<FoodVO> list=null;
+	   try {
+		   SqlSession session=ssf.openSession();
+		   list=session.selectList("foodFindData",map);
+		   session.close();
+		
+	   } catch (Exception ex) {
+		   ex.printStackTrace();
+	   }
+	   return list;
+   }
+   public static int foodFindCount(Map map) {
+	   int count=0;
+	   try {
+		   SqlSession session=ssf.openSession();
+		   count=session.selectOne("foodFindCount",map);
+		   session.close();
+		
+	   } catch (Exception ex) {
+		   ex.printStackTrace();
+	   }
+	   return count;
+   }
 }

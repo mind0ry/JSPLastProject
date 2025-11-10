@@ -21,7 +21,7 @@
             <div class="row h-100 align-items-center">
                 <div class="col-12">
                     <div class="bradcumb-title text-center">
-                        <h2>아잉</h2>
+                        <h2>맛집 상세보기</h2>
                     </div>
                 </div>
             </div>
@@ -113,7 +113,12 @@
 	                  <a href="#" class="btn btn-xs btn-danger">좋아요</a>
 	                  <a href="#" class="btn btn-xs btn-success">찜하기</a>
 	                  <a href="#" class="btn btn-xs btn-info">예약하기</a>
+	                  <c:if test="${link!=1 }">
 	                  <a href="../food/list.do?page=${page}" class="btn btn-xs btn-warning">목록</a>
+	                  </c:if>
+	                  <c:if test="${link==1 }">
+	                  <a href="javascript:history.back()" class="btn btn-xs btn-warning">목록</a>
+	                  </c:if>
 	                 </td>
 	                </tr>
 	              </table>

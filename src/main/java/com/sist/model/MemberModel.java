@@ -76,7 +76,7 @@ public class MemberModel {
    public void memberLogin(HttpServletRequest request,HttpServletResponse response) {
 	   String id=request.getParameter("id");
 	   String pwd=request.getParameter("pwd");
-	   MemberVO vo=MemberDAO.memberLogin(id, pwd);
+	   MemberVO vo=MemberDAO.memberLogin(id, pwd); 
 	   if(vo.getMsg().equals("OK")) {
 		   HttpSession session=request.getSession();
 		   session.setAttribute("id", vo.getId());
