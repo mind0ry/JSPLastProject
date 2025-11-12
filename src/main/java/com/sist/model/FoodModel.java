@@ -122,6 +122,7 @@ public class FoodModel {
 	   String page=request.getParameter("page");
 	   String link=request.getParameter("link");
 	   FoodVO vo=FoodDAO.foodDetailData(Integer.parseInt(fno));
+	   request.setAttribute("jCount", 0);
 	   request.setAttribute("vo", vo);
 	   request.setAttribute("page", page);
 	   request.setAttribute("link", link);
@@ -129,6 +130,19 @@ public class FoodModel {
 	   // String food_detail(FoodVO vo)
 	   // => 스프링 : 전송 객체 / 사용자 요청값 Model
 	   // => request는 사용하지 않는다 
+	   JjimVO jvo=new JjimVO();
+	   jvo.setRno(Integer.parseInt(fno));
+	   jvo.setType(1);
+	   HttpSession session=request.getSession();
+	   String id=(String)session.getAttribute("id");
+	   jvo.setId(id);
+	   // 로그인된 상태 
+	   if(id!=null)
+	   {
+		   int jCount=JjimDAO.jjimCheckCount(jvo);
+		   request.setAttribute("jCount", jCount);
+	   }
+	   
 	   request.setAttribute("main_jsp", "../food/detail.jsp");
 	   return "../main/main.jsp";
    }
@@ -198,11 +212,13 @@ public class FoodModel {
    public void food_find_ajax(HttpServletRequest request,
 		   HttpServletResponse response)
    {
+	   System.out.println(1);
 	   String page=request.getParameter("page");
 	   if(page==null)
 		   page="1";
 	   int curpage=Integer.parseInt(page);
 	   String[] types=request.getParameterValues("type");
+	   System.out.println(Arrays.toString(types));
 	   String column=request.getParameter("column");
 	   String fd=request.getParameter("fd");
 	   Map map=new HashMap();
@@ -215,42 +231,42 @@ public class FoodModel {
 	   map.put("ss", fd);
 	   map.put("column", column);
 	   List<FoodVO> list=FoodDAO.foodFindData(map);
-	   
-	   for(FoodVO vo:list) {
+	   for(FoodVO vo:list)
+	   {
 		   String s=vo.getAddress();
 		   s=s.substring(0,s.indexOf(" "));
 		   vo.setAddress(s.trim());
 	   }
-	   
 	   int count = FoodDAO.foodFindCount(map);
 	   final int BLOCK=10;
 	   int startPage=((curpage-1)/BLOCK*BLOCK)+1;
 	   int endPage=((curpage-1)/BLOCK*BLOCK)+BLOCK;
 	   int totalpage=(int)(Math.ceil(count/12.0));
-	   if(endPage>totalpage) 
+	   if(endPage>totalpage)
 		   endPage=totalpage;
 	   /*
-	    * 1 2 3 4 5 6 7 8 9 10 => curpage
-	    * |					|
-	    * startPage		  endPage
+	    *   1 2 3 4 5 6 7 8 9 10 => curpage
+	    *   |                 |
+	    *  startPage         endPage
 	    */
 	   int i=0;
 	   JSONArray arr=new JSONArray();
 	   // list = [] JSONArray
 	   // vo = {} JSONObject
 	   // fno,name,type,address,poster,likecount,replycount
-	   for(FoodVO vo:list) {
+	   for(FoodVO vo:list)
+	   {
 		   JSONObject obj=new JSONObject();
 		   obj.put("fno", vo.getFno());
-		   // {"fno":1...}
+		   // [{"fno":1,"name":....}
 		   obj.put("name", vo.getName());
 		   obj.put("type", vo.getType());
 		   obj.put("address", vo.getAddress());
 		   obj.put("poster", vo.getPoster());
 		   obj.put("likecount", vo.getLikecount());
 		   obj.put("replycount", vo.getReplycount());
-		   
-		   if(i==0) {
+		   if(i==0)
+		   {
 			   obj.put("curpage", curpage);
 			   obj.put("totalpage", totalpage);
 			   obj.put("startPage", startPage);
@@ -260,8 +276,7 @@ public class FoodModel {
 		   arr.add(obj);
 		   i++;
 	   }
-	   
-	   System.err.println(arr.toJSONString());
+	   System.out.println(arr.toJSONString());
 	   try
 	   {
 		   response.setContentType("text/plain;charset=UTF-8");

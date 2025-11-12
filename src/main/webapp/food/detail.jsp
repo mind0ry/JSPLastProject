@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +12,86 @@
   margin: 0px auto;
   width: 850px;
 }
+.img-link{
+  cursor: pointer
+}
 </style>
+<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+<script type="text/javascript">
+// ?rno=1&page=5 => ${param.rno} => request.getParameter("rno")
+let likeCheck=false
+let rno=${param.fno}
+let page=${param.page}
+let id='${sessionScope.id}'
+// 전역변수 
+$(function(){
+	if(id.length>0)
+	{
+		$.ajax({
+			type:'post',
+			url:'../like/likeCheck.do',
+			data:{
+				"rno":rno,
+				"type":1
+			},
+			success:function(result)
+			{
+				if(result==='OK')
+				{
+					likeCheck=true
+					$('#likeBtn').attr("src","../img/images/likeon.png")
+				}
+				else
+				{
+					likeCheck=false
+					$('#likeBtn').attr("src","../img/images/likeoff.png")
+				}
+				//$('#likecount').text(result)
+			},
+			error:function(err)
+			{
+				console.log(err)
+			}
+		})
+	}
+	// like 이미지 클릭
+	$('#likeBtn').click(function(){
+		if(likeCheck===true)
+		{
+			$.ajax({
+				type:'post',
+				url:'../like/likeOff.do',
+				data:{"rno":rno,"type":1},
+				success:function(result)
+				{
+					if(result>=0)
+					{
+						likeCheck=false
+						$('#likeBtn').attr('src','../img/images/likeoff.png')
+					}
+				}
+			})
+		}
+		else
+		{
+			$.ajax({
+				type:'post',
+				url:'../like/likeOn.do',
+				data:{"rno":rno,"type":1},
+				success:function(result)
+				{
+					if(result>=0)
+					{
+						likeCheck=true
+						$('#likeBtn').attr('src','../img/images/likeon.png')
+					}
+				}
+			})
+		}
+		
+	})
+})
+</script>
 </head>
 <body>
  <!-- ****** Breadcumb Area Start ****** -->
@@ -48,21 +127,26 @@
             <div class="row justify-content-center">
              <div class="col-12 col-lg-8">
                <div class="row no-gutters">
-                  <!-- Related Post Area -->
+                    <!-- Related Post Area -->
                     <div class="col-12 col-sm-12">
                             <div class="related-post-area section_padding_50">
                                 
                                 <div class="related-post-slider owl-carousel">
                                     <!-- Single Related Post-->
-                                    <c:forTokens items="${vo.images }" delims="," var="img">
+                                    <c:forTokens items="${vo.images }" delims=","
+                                      var="img"
+                                    >
                                     <div class="single-post">
                                         <!-- Post Thumb -->
                                         <div class="post-thumb">
                                             <img src="${img }" alt="">
                                         </div>
+                                      
                                     </div>
+                                 
                                     </c:forTokens>
                                 </div>
+                                
                              </div>
                            </div>  
                   
@@ -110,14 +194,26 @@
 	                </tr>
 	                <tr>
 	                 <td class="text-right">
-	                  <a href="#" class="btn btn-xs btn-danger">좋아요</a>
-	                  <a href="#" class="btn btn-xs btn-success">찜하기</a>
+	                 <c:if test="${sessionScope.id!=null && sessionScope.admin=='n' }">
+	        
+	                   <img src="../img/images/likeoff.png"
+	                    style="width: 25px;height: 25px"
+	                    class="img-link" id="likeBtn"
+	                   >
+	                  <c:if test="${jCount==0 }">
+	                   <a href="../jjim/jjim_insert.do?rno=${vo.fno }&type=1&page=${page}" class="btn btn-xs btn-success">찜하기</a>
+	                  </c:if>
+	                  <c:if test="${jCount!=0 }">
+	                   <span class="btn btn-xs btn-outline-success">찜하기</span>
+	                  </c:if>
+	                  
 	                  <a href="#" class="btn btn-xs btn-info">예약하기</a>
+	                 </c:if>
 	                  <c:if test="${link!=1 }">
-	                  <a href="../food/list.do?page=${page}" class="btn btn-xs btn-warning">목록</a>
+	                   <a href="../food/list.do?page=${page }" class="btn btn-xs btn-warning">목록</a>
 	                  </c:if>
 	                  <c:if test="${link==1 }">
-	                  <a href="javascript:history.back()" class="btn btn-xs btn-warning">목록</a>
+	                   <a href="javascript:history.back()" class="btn btn-xs btn-warning">목록</a>
 	                  </c:if>
 	                 </td>
 	                </tr>
@@ -126,7 +222,7 @@
 	                <tr>
 	                 <td class="text-center">
 	                  <div id="map" style="width:100%;height:350px;"></div>
-	                  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=500f9263086d9dabb5676152c0e94936&libraries=services"></script>
+	                  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=72fa81817487692b6dc093004af97650&libraries=services"></script>
 						<script>
 						var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 						    mapOption = {

@@ -155,7 +155,7 @@ $(function(){
                                         <%-- 지도 이용 --%>
                                         <a class="dropdown-item" href="../food/find.do">맛집 찾기</a>
                                         <c:if test="${sessionScope.id!=null && sessionScope.admin=='n' }">
-                                         <a class="dropdown-item" href="single.html">맛집 예약</a>
+                                         <a class="dropdown-item" href="../reserve/reserve_main.do">맛집 예약</a>
                                         <%-- 네이버 카페 / 블로그 : 형태소 분석 --%>
                                          <a class="dropdown-item" href="single.html">맛집 추천</a>
                                         </c:if>
@@ -201,7 +201,7 @@ $(function(){
                                 </li>
                                 <c:if test="${sessionScope.id!=null && sessionScope.admin=='n' }">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">빠른 예약</a>
+                                    <a class="nav-link" href="../reserve/reserve_main.do">빠른 예약</a>
                                 </li>
                                 </c:if>
                                 <c:if test="${sessionScope.id!=null && sessionScope.admin=='n' }">
