@@ -33,4 +33,63 @@ public class ReserveDAO {
 		}
 		return list;
 	}
+	/*
+	 * <select id="reserveDateTimes" resultType="string" parameterType="int">
+		  SELECT times FROM reserve_date
+		  WHERE dno=#{dno} 
+		</select>
+		<select id="reserveTime" resultType="string" parameterType="int">
+		  SELECT time FROM reserve_time
+		  WHERE tno=#{tno}
+		</select>
+	 */
+	public static String reserveDateTimes(int dno) {
+		String times="";
+		try {
+			SqlSession session=ssf.openSession();
+			times=session.selectOne("reserveDateTimes",dno);
+			session.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return times;
+	}
+	
+	public static String reserveTime(int tno) {
+		String times="";
+		try {
+			SqlSession session=ssf.openSession();
+			times=session.selectOne("reserveTime",tno);
+			session.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return times;
+	}
+	
+	public static void reserveInsert(ReserveVO vo) {
+		try {
+			SqlSession session=ssf.openSession(true);
+			session.insert("reserveInsert",vo);
+			session.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	/*
+	<delete id="reserveCancel" parameterType="int">
+	  DELETE FROM reserve_info
+	  WHERE no=#{no}
+	</delete>
+	 */
+	public static void reserveCancel(int no) {
+		try {
+			SqlSession session=ssf.openSession(true);
+			session.delete("reserveCancel",no);
+			session.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 }

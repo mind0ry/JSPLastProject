@@ -17,6 +17,7 @@
      <typeAlias type="com.sist.vo.EmpVO" alias="EmpVO"/>
      <typeAlias type="com.sist.vo.JjimVO" alias="JjimVO"/>
      <typeAlias type="com.sist.vo.ReserveVO" alias="ReserveVO"/>
+     <typeAlias type="com.sist.vo.ReviewVO" alias="ReviewVO"/>
    </typeAliases>
   <environments default="develpoment">
     <environment id="develpoment">
@@ -41,5 +42,9 @@
 	<mapper resource="com/sist/mapper/like-mapper.xml"/>
 	<mapper resource="com/sist/mapper/jjim-mapper.xml"/>
 	<mapper resource="com/sist/mapper/reserve-mapper.xml"/>
+	<mapper resource="com/sist/mapper/mypage-mapper.xml"/>
+	<mapper resource="com/sist/mapper/admin-mapper.xml"/>
+	<mapper resource="com/sist/mapper/review-mapper.xml"/>
+	<mapper resource="com/sist/mapper/cart-mapper.xml"/>
   </mappers>
 </configuration>

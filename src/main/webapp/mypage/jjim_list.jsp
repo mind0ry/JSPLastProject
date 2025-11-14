@@ -33,9 +33,15 @@ $(function(){
 				$('#score').text(json.score)
 				$('#parking').text(json.parking)
 				$('#price').text(json.price)
+				$('#content').text(json.content)
 				$('#theme').text(json.theme)
 				$('#print').show()
+				
+				setTimeout(()=>{
+					$('#print').hide("slow")
+				}, 10000);
 			},
+			
 			error:function(err) {
 				console.log(err)
 			}

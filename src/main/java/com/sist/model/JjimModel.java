@@ -81,8 +81,6 @@ public class JjimModel {
 		  response.setContentType("text/plain;charset=UTF-8");
 		  PrintWriter out=response.getWriter();
 		  out.write(obj.toJSONString());
-	  } catch (Exception e) {
-	  }
+	  } catch (Exception e) {}
   }
-	  
 }
