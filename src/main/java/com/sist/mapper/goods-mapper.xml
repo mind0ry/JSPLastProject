@@ -34,4 +34,32 @@
     SELECT * FROM ${goods}
     WHERE no=#{no}
   </select>
+  
+  <insert id="orderInsert" parameterType="com.sist.vo.OrdersVO">
+    INSERT INTO mvcOrders VALUES(
+      order_no_seq.nextval,
+      #{gno},#{id},#{name},#{post},#{addr1},#{addr2},#{msg},#{account},SYSDATE
+    )
+  </insert>
+  
+  
+  <resultMap type="com.sist.vo.OrdersVO" id="orderMap">
+    <result column="goods_poster" property="gvo.goods_poster"/>
+    <result column="goods_name" property="gvo.goods_name"/>
+    <result column="goods_price" property="gvo.goods_price"/>
+  </resultMap>
+  <select id="orderListData" parameterType="string" resultMap="orderMap">
+    SELECT mo.no,gno,goods_poster,goods_name,goods_price,
+    		account, TO_CHAR(regdate,'YYYY-MM-DD') as dbday
+    FROM mvcOrders mo,goods_all ga
+    WHERE mo.gno=ga.no
+    AND id=#{id}
+  </select>
+  <select id="orderDetailData" parameterType="int" resultMap="orderMap">
+    SELECT mo.no,gno,goods_poster,goods_name,goods_price,
+    		account, TO_CHAR(regdate,'YYYY-MM-DD') as dbday,name,addr1,addr2,post,msg
+    FROM mvcOrders mo,goods_all ga
+    WHERE mo.gno=ga.no
+    AND mo.no=#{no}
+  </select>
 </mapper>

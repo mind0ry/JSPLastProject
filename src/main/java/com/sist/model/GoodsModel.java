@@ -195,8 +195,36 @@ public class GoodsModel {
 	  return "../main/main.jsp";
   }
   
-  
-  
+  @RequestMapping("goods/buy_ok.do")
+  public void goods_buy_ok(HttpServletRequest request,HttpServletResponse response) {
+	  
+	  String gno=request.getParameter("gno");
+	  String account=request.getParameter("account");
+	  String price=request.getParameter("price");
+	  String post=request.getParameter("post");
+	  String addr1=request.getParameter("addr1");
+	  String addr2=request.getParameter("addr2");
+	  String msg=request.getParameter("msg");
+	  
+	  HttpSession session=request.getSession();
+	  String id=(String)session.getAttribute("id");
+	  String name=(String)session.getAttribute("name");
+	  
+	  OrdersVO vo=new OrdersVO();
+	  vo.setId(id);
+	  vo.setName(name);
+	  vo.setMsg(msg);
+	  vo.setAddr1(addr1);
+	  vo.setAddr2(addr2);
+	  vo.setPost(post);
+	  vo.setAccount(Integer.parseInt(account));
+	  vo.setGno(Integer.parseInt(gno));
+	  price=price.replaceAll("[^0-9]", "");
+	  vo.setPrice(Integer.parseInt(price));
+	  
+	  GoodsDAO.orderInsert(vo);
+  }
+
 }
 
 

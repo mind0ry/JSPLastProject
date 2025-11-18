@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 
 import com.sist.commons.*;
 import com.sist.vo.GoodsVO;
+import com.sist.vo.OrdersVO;
 
 public class GoodsDAO {
 
@@ -83,6 +84,62 @@ public class GoodsDAO {
       session.close();
       
       return vo;
+   }
+   
+   public static void orderInsert(OrdersVO vo) {
+	   try {
+		   SqlSession session = ssf.openSession(true);
+
+		   session.insert("orderInsert",vo);
+		   session.close();
+	   } catch (Exception ex) {
+		   ex.printStackTrace();
+	   }
+   }
+   
+/*
+ *<select id="orderListData" parameterType="string" resultMap="orderMap">
+    SELECT no,gno,goods_poster,goods_name,goods_price,
+    		account, TO_CHAR(regdate,'YYYY-MM-DD') as dbday
+    FROM mvcOrders mo,goods_all ga
+    WHERE mo.gno=ga.no
+    AND id=#{id}
+  </select>
+ */
+   public static List<OrdersVO> orderListData(String id) {
+	   List<OrdersVO> list=null;
+	   
+	   try {
+		   SqlSession session=ssf.openSession();
+		   list=session.selectList("orderListData",id);
+		   session.close();
+	   } catch (Exception ex) {
+		   ex.printStackTrace();
+	   }
+	   
+	   return list;
+   }
+   
+   /*
+    * <select id="orderdetailData" parameterType="int" resultMap="orderMap">
+    SELECT mo.no,gno,goods_poster,goods_name,goods_price,
+    		account, TO_CHAR(regdate,'YYYY-MM-DD') as dbday,name,addr1,addr2,post,msg
+    FROM mvcOrders mo,goods_all ga
+    WHERE mo.gno=ga.no
+    AND mo.no=#{no}
+  </select>
+    */
+   public static OrdersVO orderDetailData(int no) {
+	   OrdersVO vo=null;
+	   
+	   try {
+		   SqlSession session=ssf.openSession();
+		   vo=session.selectOne("orderDetailData",no);
+		   session.close();
+	   } catch (Exception ex) {
+		   ex.printStackTrace();
+	   }
+	   return vo;
    }
    
 }
