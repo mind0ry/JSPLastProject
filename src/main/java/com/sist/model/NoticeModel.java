@@ -9,10 +9,24 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.*;
+import java.net.*;
+import java.io.*;
 @Controller
 public class NoticeModel {
 	@RequestMapping("notice/list.do")
 	public String notice_list(HttpServletRequest request,HttpServletResponse response) {
+		
+		String page=request.getParameter("page");
+		  if(page==null)
+			  page="1";
+		  int curpage=Integer.parseInt(page);
+		  int start=(curpage-1)*10;
+		  List<NoticeVO> list=NoticeDAO.noticeListData(start);
+		  int totalpage=NoticeDAO.noticeTotalPage();
+		  
+		  request.setAttribute("list", list);
+		  request.setAttribute("curpage", curpage);
+		  request.setAttribute("totalpage", totalpage);
 		
 		request.setAttribute("main_jsp", "../notice/notice_list.jsp");
 		return "../main/main.jsp";
@@ -20,8 +34,45 @@ public class NoticeModel {
 	
 	@RequestMapping("notice/detail.do")
 	public String notice_detail(HttpServletRequest request,HttpServletResponse response) {
-		
+		  String no=request.getParameter("no");
+		  
+		  NoticeVO vo=NoticeDAO.noticeDetailData(Integer.parseInt(no));
+		  request.setAttribute("vo", vo);
 		request.setAttribute("main_jsp", "../notice/notice_detail.jsp");
 		return "../main/main.jsp";
+	}
+	@RequestMapping("notice/download.do")
+	public void notice_download(HttpServletRequest request,HttpServletResponse response) {
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (Exception ex) {}
+		
+		try {
+			String fn=request.getParameter("fn");
+			URL url=this.getClass().getClassLoader().getResource("");
+			  File file=new File(url.toURI());
+			  System.out.println(file.getPath());
+			  String path=file.getPath();
+			  path=path.replace("\\", File.separator);
+			  path=path.substring(0,path.lastIndexOf(File.separator));
+			  path=path.substring(0,path.lastIndexOf(File.separator));
+			  // 저장 공간
+			  path=path+File.separator+"uploads";
+			  File dFile=new File(path+File.separator+fn);
+			  
+			  response.setHeader("Content-Disposition", "attchement;filename="+URLEncoder.encode(fn,"UTF-8"));
+			  response.setContentLength((int)dFile.length());
+			  BufferedInputStream bis=new BufferedInputStream(new FileInputStream(dFile));
+			  BufferedOutputStream bos=new BufferedOutputStream(response.getOutputStream());
+			  
+			  int i=0;
+			  byte[] buffer=new byte[1024];
+			  while((i=bis.read(buffer,0,1024))!=1) {
+				  bos.write(buffer,0,1);
+			  }
+			  bis.close();
+			  bos.close();
+		} catch (Exception ex) {
+		}
 	}
 }
